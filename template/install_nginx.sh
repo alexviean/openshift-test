@@ -1,35 +1,32 @@
 #!/bin/bash
 
 APP_UUID=$OPENSHIFT_APP_UUID
-NGINX_VERSION=1.11.10
 NGINX_MAIN_VERSION=1.11
+source versions
 
 cd ${OPENSHIFT_DATA_DIR}
 # download location to build libs
 mkdir build_nginx && cd build_nginx/
 
 #download nginx
-wget -O nginx.tar.gz http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz \
+wget -O nginx.tar.gz ${NGINX_LINK}/nginx-${NGINX_VERSION}.tar.gz \
 	&& mkdir nginx \
 	&& tar zxf nginx.tar.gz -C nginx --strip-components=1
 
 #download pcre_library
-wget -O pcre.tar.gz ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.40.tar.gz \
+wget -O pcre.tar.gz ${PCRE_LINK}/pcre-${PCRE_VERSION}.tar.gz \
 	&& mkdir pcre \
 	&& tar zxf pcre.tar.gz -C pcre --strip-components=1
-
-
-#download zlib library
-wget -O zlib.tar.gz http://zlib.net/zlib-1.2.11.tar.gz \
-	&& mkdir zlib \
-	&& tar zxf zlib.tar.gz -C zlib --strip-components=1
-
  
 #download openssl
-wget -O openssl.tar.gz https://www.openssl.org/source/openssl-1.0.2k.tar.gz \
+wget -O openssl.tar.gz ${OPENSSL_LINK}/openssl-${OPENSSL_VERSION}.tar.gz \
 	&& mkdir openssl \
 	&& tar zxf openssl.tar.gz -C openssl --strip-components=1
-	
+
+#download zlib library
+wget -O zlib.tar.gz ${ZLIB_LINK}/${ZLIB_VERSION}/zlib-${ZLIB_VERSION}.tar.gz \
+	&& mkdir zlib \
+	&& tar zxf zlib.tar.gz -C zlib --strip-components=1
 
 #download different nginx modules - ngx_http_auth_request_module, ngx_cache_purge, nginx-push-stream-module, ngx_http_geoip2_module 
 git clone https://github.com/PiotrSikora/ngx_http_auth_request_module.git \
