@@ -1,0 +1,54 @@
+Name: nginx
+Cartridge-Short-Name: NGINX
+Display-Name: Nginx
+Version: "1.11.10"
+Versions: ["1.11.10"]
+Website: https://github.com/alexviean/openshift-experiment-nginx
+Cartridge-Version: 0.0.3
+Cartridge-Vendor: alexviean
+Categories:
+  - service
+  - nginx
+  - web_framework
+Provides:
+  - nginx-1.11
+  - nginx
+  - nginx(version) = 1.11.10
+Scaling:
+  Min: 1
+  Max: -1
+Cart-Data:
+  - Key: OPENSHIFT_NGINX_PORT
+    Type: environment
+    Description: "Internal port to which the web-framework binds to."
+  - Key: OPENSHIFT_NGINX_IP
+    Type: environment
+    Description: "Internal IP to which the web-framework binds to."
+Publishes:
+  get-doc-root:
+    Type: "FILESYSTEM:doc-root"
+  publish-http-url:
+    Type: "NET_TCP:httpd-proxy-info"
+  publish-gear-endpoint:
+    Type: "NET_TCP:gear-endpoint-info"
+Subscribes:
+  set-db-connection-info:
+    Type: "ENV:NET_TCP:db:connection-info"
+    Required: false
+Group-Overrides:
+  - components:
+    - nginx-1.11
+    - web_proxy
+Endpoints:
+  - Private-IP-Name:   IP
+    Private-Port-Name: PORT
+    Private-Port:      8080
+    Public-Port-Name:  PROXY_PORT
+    Mappings:
+      - Frontend:      ""
+        Backend:       ""
+        Options:       { websocket: true }
+      - Frontend:      "/health"
+        Backend:       ""
+        Options:       { health: true }
+Install-Build-Required: false
