@@ -9,91 +9,107 @@ SERVER_PID_FILE=$OPENSHIFT_SERVER_DIR/run/nginx.pid
 
 
 function start() {
-    echo "Starting Nginx"
+	echo "Starting Nginx"
 
-    if [ -f "$SERVER_EXEC" ]; then
+	loadup_settings
+	if [ -f "$SERVER_EXEC" ]; then
 
-        if [ -f "$OPENSHIFT_REPO_DIR/nginx.conf.erb" ]; then
-            oo-erb $OPENSHIFT_REPO_DIR/nginx.conf.erb > $OPENSHIFT_REPO_DIR/nginx.conf
-        fi
+		if [ -f "$OPENSHIFT_REPO_DIR/nginx.conf.erb" ]; then
+			oo-erb $OPENSHIFT_REPO_DIR/nginx.conf.erb > $OPENSHIFT_REPO_DIR/nginx.conf
+		fi
 
-        # nginx will always use the prefix defined at compile time unless an absolute path to the conf file is given
-        nohup "$SERVER_EXEC" -c "$SERVER_CONFIG_FILE" 2>&1
-        [ "$?" == "0" ] && wait_for_pid_file $SERVER_PID_FILE
+		# nginx will always use the prefix defined at compile time unless an absolute path to the conf file is given
+		nohup "$SERVER_EXEC" -c "$SERVER_CONFIG_FILE" 2>&1
+		[ "$?" == "0" ] && wait_for_pid_file $SERVER_PID_FILE
 
-    else
-        echo "WARNING: Could not find the compiled application bin/nginx, will not start"
-    fi
+	else
+		echo "WARNING: Could not find the compiled application bin/nginx, will not start"
+	fi
 }
 
 
 function stop() {
-    echo "Starting Nginx"
+	echo "Starting Nginx"
 
-    if [ -f "$SERVER_PID_FILE" ]; then
-        pid=`cat "$SERVER_PID_FILE" 2> /dev/null`
-        eval "'$SERVER_EXEC' -c '$SERVER_CONFIG_FILE' -s stop"
-        wait_for_stop $pid
-    fi
+	if [ -f "$SERVER_PID_FILE" ]; then
+		pid=`cat "$SERVER_PID_FILE" 2> /dev/null`
+		eval "'$SERVER_EXEC' -c '$SERVER_CONFIG_FILE' -s stop"
+		wait_for_stop $pid
+	fi
 }
 
 
 function restart() {
-    echo "Restarting Nginx"
-    stop
-    start
+	echo "Restarting Nginx"
+	stop
+	start
 }
 
 
 function status() {
-    res=0
-    output=$(curl -s -m 30 http://$OPENSHIFT_SERVER_IP:$OPENSHIFT_SERVER_PORT/ &> /dev/null) || res=1
+	res=0
+	output=$(curl -s -m 30 http://$OPENSHIFT_SERVER_IP:$OPENSHIFT_SERVER_PORT/ &> /dev/null) || res=1
 
-    if [ $res -eq 0 ]
-    then
-        client_result "Nginx is running"
-        client_result "$output"
-    else
-        client_result "Nginx is either stopped or inaccessible"
-    fi
+	if [ $res -eq 0 ]
+	then
+		client_result "Nginx is running"
+		client_result "$output"
+	else
+		client_result "Nginx is either stopped or inaccessible"
+	fi
 }
 
 
 function reload() {
-    echo "Reloading Nginx"
+	echo "Reloading Nginx"
 
-    if [ -f "$SERVER_PID_FILE" ]
-    then
-        pid=`cat "$SERVER_PID_FILE" 2> /dev/null`
-        output=$("$SERVER_EXEC" -c "$SERVER_CONFIG_FILE" -s reload)
-        client_result "$output"
-    else
-        client_result "Cannot reload Nginx as it is not running"
-    fi
+	if [ -f "$SERVER_PID_FILE" ]
+	then
+		pid=`cat "$SERVER_PID_FILE" 2> /dev/null`
+		output=$("$SERVER_EXEC" -c "$SERVER_CONFIG_FILE" -s reload)
+		client_result "$output"
+	else
+		client_result "Cannot reload Nginx as it is not running"
+	fi
 }
 
 
 function tidy() {
-    client_message "Emptying log dir: $OPENSHIFT_SERVER_DIR/logs"
-    shopt -s dotglob
-    rm -rf logs/*
+	client_message "Emptying log dir: $OPENSHIFT_SERVER_DIR/logs"
+	shopt -s dotglob
+	rm -rf logs/*
+}
+
+
+function loadup_settings() {
+	if [ -f "$OPENSHIFT_REPO_DIR/php.ini.erb" ] && [ -e "$OPENSHIFT_SERVER_DIR/usr/etc"]; then
+	oo-erb $OPENSHIFT_REPO_DIR/php.ini.erb > $OPENSHIFT_SERVER_DIR/usr/etc/php.ini
+	fi
+
+	if [ -f "$OPENSHIFT_REPO_DIR/www.conf.erb" ] && [ -e "$OPENSHIFT_SERVER_DIR/usr/etc/php-fpm.d"]; then
+	oo-erb $OPENSHIFT_REPO_DIR/www.conf.erb > $OPENSHIFT_SERVER_DIR/usr/etc/php-fpm.d/www.conf
+	fi
+
+	if [ -f "$OPENSHIFT_REPO_DIR/php-fpm.conf.erb" ] && [ -e "$OPENSHIFT_SERVER_DIR/usr/etc"]; then
+	oo-erb $OPENSHIFT_REPO_DIR/php-fpm.conf.erb > $OPENSHIFT_SERVER_DIR/usr/etc/php-fpm.conf
+	fi
 }
 
 
 function update() {
-    version=${SERVER_VERSION:-1.4.4}
+	version=${SERVER_VERSION:-1.4.4}
 
-    echo "Rebuilding Nginx v$version"
-    stop
+	echo "Rebuilding Nginx v$version"
+	stop
 
-    mkdir -p tmp/build
-    bin/compile tmp/build
+	mkdir -p tmp/build
+	bin/compile tmp/build
 
-    bin_dir="usr/bin"
-    mkdir -p $bin_dir
-    cp -f tmp/build/out/nginx $bin_dir
-    
-    rm -rf tmp/build
+	bin_dir="usr/bin"
+	mkdir -p $bin_dir
+	cp -f tmp/build/out/nginx $bin_dir
+	
+	rm -rf tmp/build
 }
 
 
