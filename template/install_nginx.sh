@@ -62,7 +62,7 @@ cd ${OPENSHIFT_DATA_DIR}build_nginx/openssl \
 	&& make install
 	
 
-cd ${OPENSHIFT_HOMEDIR}server/usr/bin \
+cd ${OPENSHIFT_SERVER_DIR}/usr/bin \
 && mv nginx nginx.old
 	
 
@@ -70,18 +70,21 @@ cd ${OPENSHIFT_HOMEDIR}server/usr/bin \
 
 cd ${OPENSHIFT_DATA_DIR}build_nginx/nginx \
 &&  ./configure \
-	--prefix=${OPENSHIFT_HOMEDIR}server/ \
+	--prefix=${OPENSHIFT_SERVER_DIR} \
 	--with-cc-opt='-g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2' \
     	--with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro' \
-   	--sbin-path=${OPENSHIFT_HOMEDIR}server/usr/bin/nginx \
-    	--conf-path=${OPENSHIFT_HOMEDIR}server/conf/nginx.conf \
-	--http-log-path=${OPENSHIFT_HOMEDIR}server/logs/access.log \
-    	--error-log-path=${OPENSHIFT_HOMEDIR}server/logs/error.log \
-    	--http-client-body-temp-path=${OPENSHIFT_HOMEDIR}server/temp/body \
-    	--http-proxy-temp-path=${OPENSHIFT_HOMEDIR}server/temp/proxy \
-	--sbin-path=${OPENSHIFT_HOMEDIR}server/usr/bin/nginx \
-	--pid-path=${OPENSHIFT_HOMEDIR}server/run/nginx.pid \
-	--with-debug \
+   	--sbin-path=${OPENSHIFT_SERVER_DIR}usr/bin/nginx \
+    	--conf-path=${OPENSHIFT_SERVER_DIR}conf/nginx.conf \
+	--http-log-path=${OPENSHIFT_SERVER_DIR}logs/access.log \
+    	--error-log-path=${OPENSHIFT_SERVER_DIR}logs/error.log \
+    	--http-client-body-temp-path=${OPENSHIFT_SERVER_DIR}temp/body \
+    	--http-proxy-temp-path=${OPENSHIFT_SERVER_DIR}temp/proxy \
+	--sbin-path=${OPENSHIFT_SERVER_DIR}usr/bin/nginx \
+	--pid-path=${OPENSHIFT_SERVER_DIR}run/nginx.pid \
+	--with-openssl=${OPENSHIFT_DATA_DIR}build_nginx/openssl \
+	--with-zlib=${OPENSHIFT_DATA_DIR}build_nginx/zlib \
+	--with-http_gzip_static_module \
+	--with-pcre=${OPENSHIFT_DATA_DIR}build_nginx/pcre \
 	--with-http_realip_module \
 	--with-http_addition_module \
 	--with-http_sub_module \
@@ -98,10 +101,6 @@ cd ${OPENSHIFT_DATA_DIR}build_nginx/nginx \
 	--with-mail \
 	--with-mail_ssl_module \
 	--with-http_ssl_module \
-	--with-openssl=${OPENSHIFT_DATA_DIR}build_nginx/openssl \
-	--with-zlib=${OPENSHIFT_DATA_DIR}build_nginx/zlib \
-	--with-http_gzip_static_module \
-	--with-pcre=${OPENSHIFT_DATA_DIR}build_nginx/pcre \
 	--add-module=${OPENSHIFT_DATA_DIR}build_nginx/ngx_http_auth_request_module \
 	--add-module=${OPENSHIFT_DATA_DIR}build_nginx/nginx-push-stream-module \
 	--add-module=${OPENSHIFT_DATA_DIR}build_nginx/ngx_cache_purge \
@@ -111,12 +110,12 @@ cd ${OPENSHIFT_DATA_DIR}build_nginx/nginx \
 	
 
 #delete old version of nginx sbin file
-#cd ${OPENSHIFT_HOMEDIR}server/usr/versions \
+#cd ${OPENSHIFT_SERVER_DIR}/usr/versions \
 #	&& rm -rf 1.4.4
 	
 
 #edit the manifest file with the latest nginx version 
-cd ${OPENSHIFT_HOMEDIR}server/metadata \
+cd ${OPENSHIFT_SERVER_DIR}/metadata \
 	&& rm -rf manifest.yml \
 	&& touch manifest.yml \
 	&& cat <<EOF >> manifest.yml
