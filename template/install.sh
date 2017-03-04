@@ -1,8 +1,8 @@
 #!/bin/bash
 
 APP_UUID=$OPENSHIFT_APP_UUID
-NGINX_VERSION=1.10.3
-NGINX_MAIN_VERSION=1.10
+NGINX_VERSION=1.11.10
+NGINX_MAIN_VERSION=1.11
 
 cd ${OPENSHIFT_DATA_DIR}
 # download location to build libs
@@ -123,9 +123,9 @@ cd ${OPENSHIFT_HOMEDIR}nginx/metadata \
 	&& rm -rf manifest.yml \
 	&& touch manifest.yml \
 	&& cat <<EOF >> manifest.yml
-Name: nginx
-Cartridge-Short-Name: NGINX
-Display-Name: Nginx
+Name: server
+Cartridge-Short-Name: SERVER
+Display-Name: Web server
 Version: "${NGINX_VERSION}"
 Versions: ["${NGINX_VERSION}"]
 Website: https://github.com/alexviean/openshift-experiment-nginx
