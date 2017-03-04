@@ -1,0 +1,85 @@
+ cd server
+[test-origin.openshift.local server]\> ls
+README.md  conf  install.sh  logs      run	 upgrade_nginx.sh
+bin	   env	 lib	     metadata  template  usr
+bin  etc  include  lib	man  php  sbin	share  var
+[test-origin.openshift.local usr]\> cd etc
+[test-origin.openshift.local etc]\> ls
+php-fpm.conf.default  php-fpm.d
+[test-origin.openshift.local etc]\> cd ../
+[test-origin.openshift.local usr]\> cd bin
+[test-origin.openshift.local bin]\> ls
+bison	gencnval    icuinfo	      makeconv	 php	     phpize   yacc
+derb	gendict     libmcrypt-config  nginx	 php-cgi     pkgdata
+genbrk	genrb	    libtool	      phar	 php-config  re2c
+gencfu	icu-config  libtoolize	      phar.phar  phpdbg      uconv
+[test-origin.openshift.local bin]\> strip *
+strip:icu-config: File format not recognized
+strip:libmcrypt-config: File format not recognized
+strip:libtool: File format not recognized
+strip:libtoolize: File format not recognized
+strip:phar: File format not recognized
+strip:phar.phar: File format not recognized
+strip:php-config: File format not recognized
+strip:phpize: File format not recognized
+strip:yacc: File format not recognized
+[test-origin.openshift.local bin]\> mv -t ../ nginx php*
+mv: cannot overwrite directory `../php' with non-directory
+[test-origin.openshift.local bin]\> mkdir a
+[test-origin.openshift.local bin]\> mv -t a nginx php*
+mv: cannot stat `nginx': No such file or directory
+[test-origin.openshift.local bin]\> mv nginx php* -t a
+mv: cannot stat `nginx': No such file or directory
+mv: cannot stat `php*': No such file or directory
+[test-origin.openshift.local bin]\> ls
+a      genbrk	 gendict     icuinfo	       libtoolize  phar.phar  uconv
+bison  gencfu	 genrb	     libmcrypt-config  makeconv    pkgdata    yacc
+derb   gencnval  icu-config  libtool	       phar	   re2c
+[test-origin.openshift.local bin]\> cd ../
+[test-origin.openshift.local usr]\> ls
+bin  include  man    php      php-config  phpize  share
+etc  lib      nginx  php-cgi  phpdbg	  sbin	  var
+[test-origin.openshift.local usr]\> rm -rf bin
+[test-origin.openshift.local usr]\> mkdir bin
+[test-origin.openshift.local usr]\> mv nginx php* -t bin
+[test-origin.openshift.local usr]\> ls bin
+nginx  php  php-cgi  php-config  phpdbg  phpize
+[test-origin.openshift.local usr]\> quota -s
+Disk quotas for user 58bab8a5653e8af84e000040 (uid 5611): 
+     Filesystem  blocks   quota   limit   grace   files   quota   limit   grace
+/dev/mapper/vg_broker-lv_root
+                   122M       0   1024M             985       0   80000        
+[test-origin.openshift.local usr]\> ls
+bin  etc  include  lib	man  sbin  share  var
+[test-origin.openshift.local usr]\> rm -rf include man share var
+[test-origin.openshift.local usr]\> cd sbin
+[test-origin.openshift.local sbin]\> ls
+genccode  gencmn  gennorm2  gensprep  icupkg  php-fpm
+[test-origin.openshift.local sbin]\> mv php-fpm -t ../
+[test-origin.openshift.local sbin]\> rm *
+[test-origin.openshift.local sbin]\> mv ../php-fpm .
+[test-origin.openshift.local sbin]\> ls
+php-fpm
+[test-origin.openshift.local sbin]\> strip *
+[test-origin.openshift.local sbin]\> quota -s
+Disk quotas for user 58bab8a5653e8af84e000040 (uid 5611): 
+     Filesystem  blocks   quota   limit   grace   files   quota   limit   grace
+/dev/mapper/vg_broker-lv_root
+                  79980       0   1024M             198       0   80000        
+[test-origin.openshift.local sbin]\> cd ../
+[test-origin.openshift.local usr]\> ls
+bin  etc  lib  sbin
+[test-origin.openshift.local usr]\> cd etc
+[test-origin.openshift.local etc]\> ls
+php-fpm.conf.default  php-fpm.d
+[test-origin.openshift.local etc]\> cp *.default php-fpm.conf
+[test-origin.openshift.local etc]\> cd ph*
+bash: cd: php-fpm.conf: Not a directory
+[test-origin.openshift.local etc]\> cd php-fpm.d
+[test-origin.openshift.local php-fpm.d]\> ls
+www.conf.default
+[test-origin.openshift.local php-fpm.d]\> cp *.default www.conf
+[test-origin.openshift.local php-fpm.d]\> vi www.conf
+[test-origin.openshift.local php-fpm.d]\> ls
+www.conf  www.conf.default
+[test-origin.openshift.local php-fpm.d]\> lsljllkj
