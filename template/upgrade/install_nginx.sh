@@ -81,10 +81,6 @@ cd ${OPENSHIFT_DATA_DIR}build_nginx/nginx \
     	--http-proxy-temp-path=${OPENSHIFT_SERVER_DIR}temp/proxy \
 	--sbin-path=${OPENSHIFT_SERVER_DIR}usr/bin/nginx \
 	--pid-path=${OPENSHIFT_SERVER_DIR}run/nginx.pid \
-	--with-openssl=${OPENSHIFT_DATA_DIR}build_nginx/openssl \
-	--with-zlib=${OPENSHIFT_DATA_DIR}build_nginx/zlib \
-	--with-http_gzip_static_module \
-	--with-pcre=${OPENSHIFT_DATA_DIR}build_nginx/pcre \
 	--with-http_realip_module \
 	--with-http_addition_module \
 	--with-http_sub_module \
@@ -101,12 +97,22 @@ cd ${OPENSHIFT_DATA_DIR}build_nginx/nginx \
 	--with-mail \
 	--with-mail_ssl_module \
 	--with-http_ssl_module \
+	--with-openssl=${OPENSHIFT_DATA_DIR}build_nginx/openssl \
+	--with-zlib=${OPENSHIFT_DATA_DIR}build_nginx/zlib \
+	--with-http_gzip_static_module \
+	--with-pcre=${OPENSHIFT_DATA_DIR}build_nginx/pcre \
 	--add-module=${OPENSHIFT_DATA_DIR}build_nginx/ngx_http_auth_request_module \
 	--add-module=${OPENSHIFT_DATA_DIR}build_nginx/nginx-push-stream-module \
 	--add-module=${OPENSHIFT_DATA_DIR}build_nginx/ngx_cache_purge \
 	&& make \
 	&& make install	
-	
+	if [ $? -eq 0 ]; then
+		echo "NGINX has successfully been installed!"
+		rm -rf ${OPENSHIFT_DATA_DIR}build_nginx \
+		&& rm -rf ${OPENSHIFT_DATA_DIR}deploy_nginx
+	else
+		echo "The installation of NGINX has been interrupted!"
+	fi
 	
 
 #delete old version of nginx sbin file
@@ -115,7 +121,7 @@ cd ${OPENSHIFT_DATA_DIR}build_nginx/nginx \
 	
 
 #edit the manifest file with the latest nginx version 
-cd ${OPENSHIFT_SERVER_DIR}/metadata \
+cd ${OPENSHIFT_SERVER_DIR}metadata \
 	&& rm -rf manifest.yml \
 	&& touch manifest.yml \
 	&& cat <<EOF >> manifest.yml
@@ -125,7 +131,7 @@ Display-Name: Web server
 Version: "${NGINX_VERSION}"
 Versions: ["${NGINX_VERSION}"]
 Website: https://github.com/alexviean/openshift-test
-Cartridge-Version: 0.0.3
+Cartridge-Version: 0.0.4
 Cartridge-Vendor: alexviean
 Categories:
   - service
