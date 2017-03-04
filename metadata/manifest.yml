@@ -1,6 +1,6 @@
-Name: nginx
-Cartridge-Short-Name: NGINX
-Display-Name: Nginx
+Name: server
+Cartridge-Short-Name: SERVER
+Display-Name: Web server
 Version: "1.11.10"
 Versions: ["1.11.10"]
 Website: https://github.com/alexviean/openshift-experiment-nginx
