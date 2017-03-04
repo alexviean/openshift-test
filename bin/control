@@ -3,9 +3,9 @@
 source $OPENSHIFT_CARTRIDGE_SDK_BASH
 
 
-NGINX_EXEC=$OPENSHIFT_NGINX_DIR/usr/bin/nginx
-NGINX_CONFIG_FILE=$OPENSHIFT_NGINX_DIR/conf/nginx.conf
-NGINX_PID_FILE=$OPENSHIFT_NGINX_DIR/run/nginx.pid
+NGINX_EXEC=$OPENSHIFT_SERVER_DIR/usr/bin/nginx
+NGINX_CONFIG_FILE=$OPENSHIFT_SERVER_DIR/conf/nginx.conf
+NGINX_PID_FILE=$OPENSHIFT_SERVER_DIR/run/nginx.pid
 
 
 function start() {
@@ -74,7 +74,7 @@ function reload() {
 
 
 function tidy() {
-    client_message "Emptying log dir: $OPENSHIFT_NGINX_DIR/logs"
+    client_message "Emptying log dir: $OPENSHIFT_SERVER_DIR/logs"
     shopt -s dotglob
     rm -rf logs/*
 }
