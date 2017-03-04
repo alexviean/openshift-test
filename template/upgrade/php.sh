@@ -102,8 +102,8 @@ source versions
 	rm -rf libmcrypt-$MCRYPT_VERSION
 	tar -zxf libmcrypt-$MCRYPT_VERSION.tar.gz
 	cd libmcrypt-$MCRYPT_VERSION
-	./configure	--disable-posix-threads \
-	--prefix=${OPENSHIFT_DATA_DIR}libmcrypt
+	./configure	--prefix=$${OPENSHIFT_SERVER_DIR}usr --disable-posix-threads
+	
 	make install
 		if [ $? -eq 0 ]; then
 			echo "MCRYPT has successfully been installed!"
