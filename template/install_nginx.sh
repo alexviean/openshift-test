@@ -125,7 +125,7 @@ Cartridge-Short-Name: SERVER
 Display-Name: Web server
 Version: "${NGINX_VERSION}"
 Versions: ["${NGINX_VERSION}"]
-Website: https://github.com/alexviean/openshift-experiment-nginx
+Website: https://github.com/alexviean/openshift-test
 Cartridge-Version: 0.0.3
 Cartridge-Vendor: alexviean
 Categories:

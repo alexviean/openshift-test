@@ -62,54 +62,54 @@ cd ${OPENSHIFT_DATA_DIR}build_nginx/openssl \
 	&& make install
 	
 
-cd ${OPENSHIFT_HOMEDIR}server/usr/bin \
+cd ${OPENSHIFT_SERVER_DIR}/usr/bin \
 && mv nginx nginx.old
 	
 
 #configure nginx
 
-cd ${OPENSHIFT_DATA_DIR}build_nginx/nginx \
-&&  ./configure \
-	--prefix=${OPENSHIFT_HOMEDIR}server/ \
-	--with-cc-opt='-g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2' \
-    	--with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro' \
-   	--sbin-path=${OPENSHIFT_HOMEDIR}server/usr/bin/nginx \
-    	--conf-path=${OPENSHIFT_HOMEDIR}server/conf/nginx.conf \
-	--http-log-path=${OPENSHIFT_HOMEDIR}server/logs/access.log \
-    	--error-log-path=${OPENSHIFT_HOMEDIR}server/logs/error.log \
-    	--http-client-body-temp-path=${OPENSHIFT_HOMEDIR}server/temp/body \
-    	--http-proxy-temp-path=${OPENSHIFT_HOMEDIR}server/temp/proxy \
-	--sbin-path=${OPENSHIFT_HOMEDIR}server/usr/bin/nginx \
-	--pid-path=${OPENSHIFT_HOMEDIR}server/run/nginx.pid \
-	--with-debug \
-	--with-http_realip_module \
-	--with-http_addition_module \
-	--with-http_sub_module \
-	--with-http_gunzip_module \
-	--with-http_dav_module \
-	--with-http_flv_module \
-	--with-http_mp4_module  \
-	--with-http_v2_module \
-	--with-file-aio \
-	--with-ipv6 \
-	--with-http_stub_status_module \
-	--with-http_secure_link_module \
-	--with-http_random_index_module \
-	--with-mail \
-	--with-mail_ssl_module \
-	--with-http_ssl_module \
-	--with-openssl=${OPENSHIFT_DATA_DIR}build_nginx/openssl \
-	--with-zlib=${OPENSHIFT_DATA_DIR}build_nginx/zlib \
-	--with-http_gzip_static_module \
-	--with-pcre=${OPENSHIFT_DATA_DIR}build_nginx/pcre \
-	--add-module=${OPENSHIFT_DATA_DIR}build_nginx/ngx_http_auth_request_module \
-	--add-module=${OPENSHIFT_DATA_DIR}build_nginx/nginx-push-stream-module \
-	--add-module=${OPENSHIFT_DATA_DIR}build_nginx/ngx_cache_purge \
-	&& make \
-	&& make install	
+cd ${OPENSHIFT_DATA_DIR} \
+if [ ! -e ${OPENSHIFT_SERVER_DIR}usr/bin/php ]; then
+	if [ -f php-${PHP_VERSION}.tar.gz ]; then
+		echo "Found PHP source code, skip downloading."
+	else
+		echo "Downloading PHP source code"
+		wget $PHP_MIRROR/php-${PHP_VERSION}.tar.gz && \
+	  if [ $? != 0 ]; then
+		echo "ERROR! CANNOT DOWNLOAD php-${PHP_VERSION}"
+		return 1
+	  fi
+	fi
+
+	tar -zxf php-$PHP_VERSION.tar.gz
+	cd php-${PHP_VERSION}
+		
+	[ ! -f Makefile ] && \
+	./configure \
+	--prefix=$OPENSHIFT_DATA_DIR/php/ \
+	--with-config-file-path=$OPENSHIFT_DATA_DIR/php/etc \
+	--with-apxs2=$OPENSHIFT_DATA_DIR/httpd/bin/apxs \
+	--with-mcrypt=$OPENSHIFT_RUNTIME_DIR/dependencies \
+	--with-zlib=$OPENSHIFT_RUNTIME_DIR/dependencies \
+	--with-icu-dir=$OPENSHIFT_RUNTIME_DIR/dependencies \
+	--with-layout=PHP --disable-fileinfo --disable-debug --with-curl --with-mhash --with-pgsql --with-mysqli --with-pdo-mysql --with-pdo-pgsql --with-openssl --with-xmlrpc --with-xsl \
+	--with-bz2 --with-gettext --with-readline --with-kerberos --with-gd --with-jpeg-dir --with-png-dir --with-png-dir --with-xpm-dir --with-freetype-dir --without-pear \
+	--enable-gd-native-ttf --enable-fpm --enable-cli --enable-inline-optimization --enable-exif --enable-wddx --enable-zip --enable-bcmath --enable-calendar --enable-ftp \
+	--enable-mbstring --enable-soap --enable-sockets --enable-shmop --enable-dba --enable-sysvsem --enable-sysvshm --enable-sysvmsg --enable-intl --enable-opcache --enable-maintainer-zts
+	make
+	make install
+	if [ $? -eq 0 ]; then
+		echo "PHP has successfully been installed!"
+		rm -rf $OPENSHIFT_DATA_DIR/php-*
+	else
+		echo "The installation of PHP has been interrupted!"
+	fi
+else
+	echo "PHP has already been installed!"
+fi
 	
 	
 
 #delete old version of nginx sbin file
-#cd ${OPENSHIFT_HOMEDIR}server/usr/versions \
+#cd ${OPENSHIFT_SERVER_DIR}/usr/versions \
 #	&& rm -rf 1.4.4
