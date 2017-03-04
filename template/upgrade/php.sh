@@ -1,7 +1,5 @@
 #!/bin/bash
 
-APP_UUID=$OPENSHIFT_APP_UUID
-NGINX_MAIN_VERSION=1.11
 source versions
 
 ### INSTALL ICU
