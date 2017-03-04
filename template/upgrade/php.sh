@@ -4,7 +4,7 @@ source versions
 
 ### INSTALL ICU
 
-	cd $OPENSHIFT_DATA_DIR
+	cd ${OPENSHIFT_DATA_DIR}
 	if [ ! -e icu4c/lib/icu ]; then
 		if [ ! -e icu4c-${ICU_VERSION[1]}-src.tgz ]; then
 		wget $ICU_LINK/${ICU_VERSION[0]}/icu4c-${ICU_VERSION[1]}-src.tgz
@@ -13,11 +13,11 @@ source versions
 	tar -zxf icu4c-${ICU_VERSION[1]}-src.tgz
 	cd icu/source/
 	chmod +x runConfigureICU configure install-sh
-	./configure --prefix=${OPENSHIFT_DATA_DIR}icu4c/
+	./configure --prefix=${OPENSHIFT_SERVER_DIR}usr
 	make && make install
 		if [ $? -eq 0 ]; then
 			echo "ICU has successfully been installed!"
-			rm -rf $OPENSHIFT_RUNTIME_DIR/icu*
+			rm -rf $OPENSHIFT_DATA_DIR/icu*
 		else
 			echo "The installation of ICU has been interrupted."
 		fi
@@ -36,11 +36,11 @@ source versions
 	tar -zxf zlib-$ZLIB_VERSION.tar.gz
 	cd zlib-$ZLIB_VERSION
 	chmod +x configure
-	./configure --prefix=${OPENSHIFT_DATA_DIR}zlib
+	./configure --prefix=${OPENSHIFT_SERVER_DIR}usr
 	make && make install
 		if [ $? -eq 0 ]; then
 			echo "ZLIB has successfully been installed!"
-			rm -rf $OPENSHIFT_RUNTIME_DIR/zlib-*
+			rm -rf $OPENSHIFT_DATA_DIR/zlib-*
 		else
 			echo "The installation of ZLIB has been interrupted."
 		fi
@@ -58,11 +58,11 @@ source versions
 	rm -rf re2c-$RE2C_VERSION
 	tar -zxf re2c-${RE2C_VERSION}.tar.gz
 	cd re2c-$RE2C_VERSION
-	./configure --prefix=${OPENSHIFT_DATA_DIR}re2c
+	./configure --prefix=${OPENSHIFT_SERVER_DIR}usr
 	make install
 		if [ $? -eq 0 ]; then
 			echo "RE2C has successfully been installed!"
-			rm -rf $OPENSHIFT_RUNTIME_DIR/re2c-*
+			rm -rf $OPENSHIFT_DATA_DIR/re2c-*
 		else
 			echo "The installation of RE2C has been interrupted."
 		fi
@@ -80,11 +80,11 @@ source versions
 	rm -rf bison-${BISON_VERSION}
 	tar -zxf bison-${BISON_VERSION}.tar.gz
 	cd bison-${BISON_VERSION}
-	./configure --prefix=${OPENSHIFT_DATA_DIR}bison
+	./configure --prefix=${OPENSHIFT_SERVER_DIR}usr
 	make install
 		if [ $? -eq 0 ]; then
 			echo "BISON has successfully been installed!"
-			rm -rf $OPENSHIFT_RUNTIME_DIR/bison-*
+			rm -rf $OPENSHIFT_DATA_DIR/bison-*
 		else
 			echo "The installation of BISON has been interrupted."
 		fi
@@ -107,7 +107,7 @@ source versions
 	make install
 		if [ $? -eq 0 ]; then
 			echo "MCRYPT has successfully been installed!"
-			rm -rf $OPENSHIFT_RUNTIME_DIR/libmcrypt-*
+			rm -rf $OPENSHIFT_DATA_DIR/libmcrypt-*
 		else
 			echo "The installation of MCRYPT has been interrupted."
 		fi
@@ -125,11 +125,11 @@ source versions
 	rm -rf libtool-${LIBTOOL_VERSION}
 	tar -zxf libtool-${LIBTOOL_VERSION}.tar.gz
 	cd libtool-${LIBTOOL_VERSION}
-	./configure --prefix=${OPENSHIFT_DATA_DIR}libtool
+	./configure --prefix=${OPENSHIFT_SERVER_DIR}usr
 	make install
 		if [ $? -eq 0 ]; then
 			echo "LIBTOOL has successfully been installed!"
-			rm -rf $OPENSHIFT_RUNTIME_DIR/libtool-*
+			rm -rf $OPENSHIFT_DATA_DIR/libtool-*
 		else
 			echo "The installation of LIBTOOL has been interrupted."
 		fi
