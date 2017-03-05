@@ -29,5 +29,5 @@ http {
 
     keepalive_timeout  65;
 
-    include  <%= ENV['OPENSHIFT_REPO_DIR'] %>nginx.conf;
+    include  <%= ENV['OPENSHIFT_REPO_DIR'] %>usr/etc/nginx.conf;
 }

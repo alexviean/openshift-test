@@ -1,29 +1,29 @@
 #!/bin/bash
 
-source $OPENSHIFT_CARTRIDGE_SDK_BASH
+source ${OPENSHIFT_CARTRIDGE_SDK_BASH}
 
 
-SERVER_EXEC=$OPENSHIFT_SERVER_DIR/usr/bin/nginx
-SERVER_CONFIG_FILE=$OPENSHIFT_SERVER_DIR/conf/nginx.conf
-SERVER_PID_FILE=$OPENSHIFT_SERVER_DIR/run/nginx.pid
+SERVER_EXEC=${OPENSHIFT_SERVER_DIR}usr/bin/nginx
+SERVER_CONFIG_FILE=${OPENSHIFT_SERVER_DIR}conf/nginx.conf
+SERVER_PID_FILE=${OPENSHIFT_SERVER_DIR}run/nginx.pid
 
 
 function start() {
 	echo "Starting Nginx"
 
 	loadup_settings
-	if [ -f "$SERVER_EXEC" ]; then
+	if [ -f "${SERVER_EXEC}" ]; then
 
-		if [ -f "$OPENSHIFT_REPO_DIR/nginx.conf.erb" ]; then
-			oo-erb $OPENSHIFT_REPO_DIR/nginx.conf.erb > $OPENSHIFT_REPO_DIR/nginx.conf
+		if [ -f "${OPENSHIFT_REPO_DIR}nginx.conf.erb" ]; then
+			oo-erb ${OPENSHIFT_REPO_DIR}nginx.conf.erb > ${OPENSHIFT_SERVER_DIR}usr/etc/nginx.conf
 		fi
 
 		# nginx will always use the prefix defined at compile time unless an absolute path to the conf file is given
-		nohup "$SERVER_EXEC" -c "$SERVER_CONFIG_FILE" 2>&1
-		[ "$?" == "0" ] && wait_for_pid_file $SERVER_PID_FILE
+		nohup "${SERVER_EXEC}" -c "${SERVER_CONFIG_FILE}" 2>&1
+		[ "$?" == "0" ] && wait_for_pid_file ${SERVER_PID_FILE}
 
 	else
-		echo "WARNING: Could not find the compiled application bin/nginx, will not start"
+		echo "WARNING: Could not find the execution file. Server will not start"
 	fi
 }
 
@@ -31,9 +31,9 @@ function start() {
 function stop() {
 	echo "Starting Nginx"
 
-	if [ -f "$SERVER_PID_FILE" ]; then
-		pid=`cat "$SERVER_PID_FILE" 2> /dev/null`
-		eval "'$SERVER_EXEC' -c '$SERVER_CONFIG_FILE' -s stop"
+	if [ -f "${SERVER_PID_FILE}" ]; then
+		pid=`cat "${SERVER_PID_FILE}" 2> /dev/null`
+		eval "'${SERVER_EXEC}' -c '${SERVER_CONFIG_FILE}' -s stop"
 		wait_for_stop $pid
 	fi
 }
@@ -48,7 +48,7 @@ function restart() {
 
 function status() {
 	res=0
-	output=$(curl -s -m 30 http://$OPENSHIFT_SERVER_IP:$OPENSHIFT_SERVER_PORT/ &> /dev/null) || res=1
+	output=$(curl -s -m 30 http://${OPENSHIFT_SERVER_IP}:${OPENSHIFT_SERVER_PORT}/ &> /dev/null) || res=1
 
 	if [ $res -eq 0 ]
 	then
@@ -63,10 +63,10 @@ function status() {
 function reload() {
 	echo "Reloading Nginx"
 
-	if [ -f "$SERVER_PID_FILE" ]
+	if [ -f "${SERVER_PID_FILE}" ]
 	then
-		pid=`cat "$SERVER_PID_FILE" 2> /dev/null`
-		output=$("$SERVER_EXEC" -c "$SERVER_CONFIG_FILE" -s reload)
+		pid=`cat "${SERVER_PID_FILE}" 2> /dev/null`
+		output=$("${SERVER_EXEC}" -c "${SERVER_CONFIG_FILE}" -s reload)
 		client_result "$output"
 	else
 		client_result "Cannot reload Nginx as it is not running"
@@ -75,7 +75,7 @@ function reload() {
 
 
 function tidy() {
-	client_message "Emptying log dir: $OPENSHIFT_SERVER_DIR/logs"
+	client_message "Emptying log dir: ${OPENSHIFT_SERVER_DIR}logs"
 	shopt -s dotglob
 	rm -rf logs/*
 }
