@@ -3,7 +3,7 @@
 source versions
 NGINX_MAIN_VERSION=1.11
 
-function prepare_dep() {
+function prepare_ndep() {
 	cd ${OPENSHIFT_DATA_DIR}
 	# download location to build libs
 	mkdir build_nginx && cd build_nginx
