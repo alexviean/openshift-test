@@ -1,18 +1,18 @@
-## Openshift Nginx Cartridge
+## Openshift Nginx + PHP 7 Cartridge
 
-A cartridge for openshift that enables Nginx to be used as the web server.
+A cartridge for openshift that uses NGINX and PHP 7 as the web server.
 
 
 ### Installation
 
 To install this cartridge use the cartridge reflector when creating an app
 
-	rhc create-app myapp http://cartreflect-claytondev.rhcloud.com//github/alexviean/openshift-upgradable-nginx
+	rhc create-app myapp http://cartreflect-claytondev.rhcloud.com/github/alexviean/openshift-web-server
 
 
 ### Configuration
 
-The cartridge installs two config files. One at <code>$OPENSHIFT_NGINX_DIR/conf/nginx.conf</code> which gets loaded by the executable
+The cartridge installs two config files. One at <code>$OPENSHIFT_SERVER_DIR/conf/nginx.conf</code> which gets loaded by the executable
 and sets up specific app configuration such as logs and pid files.
 
 The config then includes another nginx.conf which must exist at <code>$OPENSHIFT_REPO_DIR/nginx.conf</code>. This config should
