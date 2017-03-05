@@ -3,7 +3,7 @@
 source versions
 
 cd ${OPENSHIFT_DATA_DIR}
-if [ ! -e php ]; then
+if [ ! -e ${OPENSHIFT_SERVER_DIR}usr/bin/php ]; then
 	if [ -e php-${PHP_VERSION}.tar.gz ]; then
 		echo "Found PHP source code, skip downloading."
 	else
@@ -42,17 +42,37 @@ else
 fi
 
 function loadup_settings() {
-	if [ -f "$OPENSHIFT_REPO_DIR/php.ini.erb" ] && [ -e "$OPENSHIFT_SERVER_DIR/usr/etc"]; then
-	oo-erb $OPENSHIFT_REPO_DIR/php.ini.erb > $OPENSHIFT_SERVER_DIR/usr/etc/php.ini
+	if [[ ( -f "${OPENSHIFT_REPO_DIR}php.ini.erb" ) && ( -e "${OPENSHIFT_SERVER_DIR}usr/etc") ]]; then
+	oo-erb ${OPENSHIFT_REPO_DIR}php.ini.erb > ${OPENSHIFT_SERVER_DIR}usr/etc/php.ini
 	fi
 
-	if [ -f "$OPENSHIFT_REPO_DIR/www.conf.erb" ] && [ -e "$OPENSHIFT_SERVER_DIR/usr/etc/php-fpm.d"]; then
-	oo-erb $OPENSHIFT_REPO_DIR/www.conf.erb > $OPENSHIFT_SERVER_DIR/usr/etc/php-fpm.d/www.conf
+	if [[ ( -f "${OPENSHIFT_REPO_DIR}www.conf.erb" ) && ( -e "${OPENSHIFT_SERVER_DIR}usr/etc/php-fpm.d" )]]; then
+	oo-erb ${OPENSHIFT_REPO_DIR}www.conf.erb > ${OPENSHIFT_SERVER_DIR}usr/etc/php-fpm.d/www.conf
 	fi
 
-	if [ -f "$OPENSHIFT_REPO_DIR/php-fpm.conf.erb" ] && [ -e "$OPENSHIFT_SERVER_DIR/usr/etc"]; then
-	oo-erb $OPENSHIFT_REPO_DIR/php-fpm.conf.erb > $OPENSHIFT_SERVER_DIR/usr/etc/php-fpm.conf
+	if [[ ( -f "${OPENSHIFT_REPO_DIR}php-fpm.conf.erb" ) && ( -e "${OPENSHIFT_SERVER_DIR}usr/etc" )]]; then
+	oo-erb ${OPENSHIFT_REPO_DIR}php-fpm.conf.erb > ${OPENSHIFT_SERVER_DIR}usr/etc/php-fpm.conf
 	fi
 }
 
+function cleanup() {
+	del_lib=('bison' 'gencnval' 'icuinfo' 'makeconv' 'yacc' 'derb' 'gendict' 'libmcrypt-config' 'pkgdata' 'genbrk' 'genrb' 'libtool' 're2c' 'gencfu' 'icu-config' 'libtoolize' 'uconv')
+	del_sbin=('genccode' 'gencmn' 'gennorm2' 'gensprep' 'icupkg')
+
+	cd ${OPENSHIFT_SERVER_DIR}usr
+	rm -rf var share man include php
+	
+	for l in "${del_lib[@]}"; do
+		rm ${OPENSHIFT_SERVER_DIR}usr/bin/$l
+	done
+
+	for s in "${del_sbin[@]}"; do
+		rm ${OPENSHIFT_SERVER_DIR}usr/sbin/$s
+	done
+
+	strip ${OPENSHIFT_SERVER_DIR}usr/bin/*
+	strip ${OPENSHIFT_SERVER_DIR}usr/sbin/*
+}
+
 loadup_settings
+cleanup

@@ -1,7 +1,7 @@
-error_log  <%= ENV['OPENSHIFT_SERVER_DIR'] %>logs/error.log;
+error_log  <%= ENV['OPENSHIFT_SERVER_DIR'] %>logs/server_error.log;
 pid        <%= ENV['OPENSHIFT_SERVER_DIR'] %>run/nginx.pid;
 
-worker_processes  2;
+worker_processes  4;
 
 events {
     worker_connections  1024;
