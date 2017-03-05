@@ -199,6 +199,7 @@ function loadup_settings() {
 function cleanup() {
 	del_lib=('bison' 'gencnval' 'icuinfo' 'makeconv' 'yacc' 'derb' 'gendict' 'libmcrypt-config' 'pkgdata' 'genbrk' 'genrb' 'libtool' 're2c' 'gencfu' 'icu-config' 'libtoolize' 'uconv')
 	del_sbin=('genccode' 'gencmn' 'gennorm2' 'gensprep' 'icupkg')
+	to_strip=('nginx' 'php' 'php-cgi' 'phpdbg')
 
 	cd ${OPENSHIFT_SERVER_DIR}usr
 	rm -rf var share man include php
@@ -211,6 +212,10 @@ function cleanup() {
 		rm ${OPENSHIFT_SERVER_DIR}usr/sbin/$s
 	done
 
-	strip ${OPENSHIFT_SERVER_DIR}usr/bin/*
 	strip ${OPENSHIFT_SERVER_DIR}usr/sbin/php-fpm
+	
+	for t in "${to_strip[@]}"; do
+		rm ${OPENSHIFT_SERVER_DIR}usr/sbin/$t
+	done
+
 }
