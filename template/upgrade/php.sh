@@ -2,6 +2,15 @@
 
 source versions
 
+function clear_usr() {
+	if [[ ( -e ${OPENSHIFT_SERVER_DIR}usr/bin/php ) || ( -e ${OPENSHIFT_SERVER_DIR}usr/sbin/php-fpm ) ]]; then
+		cd ${OPENSHIFT_SERVER_DIR}
+		mv usr user
+		mkdir -p usr/bin
+		mv user/bin/nginx usr/bin/nginx
+	fi
+}
+
 function install_dephp() {
 
 ### INSTALL ICU
@@ -119,13 +128,6 @@ function install_dephp() {
 
 function install_php() {
 	cd ${OPENSHIFT_DATA_DIR}
-	if [ -e ${OPENSHIFT_SERVER_DIR}usr/bin/php ]; then
-		cd ${OPENSHIFT_SERVER_DIR}
-		mv usr user
-		mkdir -p usr/bin
-		mv user/bin/nginx usr/bin/nginx
-	fi
-
 	if [ -f php-${PHP_VERSION}.tar.gz ]; then
 		echo "Found PHP source code, skip downloading."
 	else
@@ -156,7 +158,7 @@ function install_php() {
 	if [ $? -eq 0 ]; then
 		echo "PHP has successfully been installed!"
 		rm -rf ${OPENSHIFT_DATA_DIR}/php-*
-		rm -rf ${OPENSHIFT_SERVER_DIR}usr/bin/old_php
+		rm -rf ${OPENSHIFT_SERVER_DIR}user
 	else
 		echo "The installation of PHP has been interrupted!"
 	fi
