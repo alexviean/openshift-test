@@ -40,3 +40,19 @@ if [ ! -e php ]; then
 else
 	echo "PHP has already been installed!"
 fi
+
+function loadup_settings() {
+	if [ -f "$OPENSHIFT_REPO_DIR/php.ini.erb" ] && [ -e "$OPENSHIFT_SERVER_DIR/usr/etc"]; then
+	oo-erb $OPENSHIFT_REPO_DIR/php.ini.erb > $OPENSHIFT_SERVER_DIR/usr/etc/php.ini
+	fi
+
+	if [ -f "$OPENSHIFT_REPO_DIR/www.conf.erb" ] && [ -e "$OPENSHIFT_SERVER_DIR/usr/etc/php-fpm.d"]; then
+	oo-erb $OPENSHIFT_REPO_DIR/www.conf.erb > $OPENSHIFT_SERVER_DIR/usr/etc/php-fpm.d/www.conf
+	fi
+
+	if [ -f "$OPENSHIFT_REPO_DIR/php-fpm.conf.erb" ] && [ -e "$OPENSHIFT_SERVER_DIR/usr/etc"]; then
+	oo-erb $OPENSHIFT_REPO_DIR/php-fpm.conf.erb > $OPENSHIFT_SERVER_DIR/usr/etc/php-fpm.conf
+	fi
+}
+
+loadup_settings
