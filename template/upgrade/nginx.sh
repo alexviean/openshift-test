@@ -1,75 +1,80 @@
 #!/bin/bash
 
-APP_UUID=$OPENSHIFT_APP_UUID
-NGINX_MAIN_VERSION=1.11
 source versions
+NGINX_MAIN_VERSION=1.11
 
-cd ${OPENSHIFT_DATA_DIR}
-# download location to build libs
-mkdir build_nginx && cd build_nginx/
+function prepare_dep() {
+	cd ${OPENSHIFT_DATA_DIR}
+	# download location to build libs
+	mkdir build_nginx && cd build_nginx
 
-#download nginx
-wget -O nginx.tar.gz ${NGINX_LINK}/nginx-${NGINX_VERSION}.tar.gz \
-	&& mkdir nginx \
-	&& tar zxf nginx.tar.gz -C nginx --strip-components=1
+	# download nginx
 
-#download pcre_library
-wget -O pcre.tar.gz ${PCRE_LINK}/pcre-${PCRE_VERSION}.tar.gz \
-	&& mkdir pcre \
-	&& tar zxf pcre.tar.gz -C pcre --strip-components=1
- 
-#download openssl
-wget -O openssl.tar.gz ${OPENSSL_LINK}/openssl-${OPENSSL_VERSION}.tar.gz \
-	&& mkdir openssl \
-	&& tar zxf openssl.tar.gz -C openssl --strip-components=1
+	wget -O nginx.tar.gz ${NGINX_LINK}nginx-${NGINX_VERSION}.tar.gz \
+		&& mkdir nginx \
+		&& tar zxf nginx.tar.gz -C nginx --strip-components=1
 
-#download zlib library
-wget -O zlib.tar.gz ${ZLIB_LINK}/${ZLIB_VERSION}/zlib-${ZLIB_VERSION}.tar.gz \
-	&& mkdir zlib \
-	&& tar zxf zlib.tar.gz -C zlib --strip-components=1
+	# download pcre_library
 
-#download different nginx modules - ngx_http_auth_request_module, ngx_cache_purge, nginx-push-stream-module, ngx_http_geoip2_module 
-git clone https://github.com/PiotrSikora/ngx_http_auth_request_module.git \
-	&& git clone https://github.com/wandenberg/nginx-push-stream-module.git \
-	&& git clone https://github.com/leev/ngx_http_geoip2_module.git \
-	&& git clone https://github.com/FRiCKLE/ngx_cache_purge.git	
+	wget -O pcre.tar.gz ${PCRE_LINK}pcre-${PCRE_VERSION}.tar.gz \
+		&& mkdir pcre \
+		&& tar zxf pcre.tar.gz -C pcre --strip-components=1
+	 
+	# download openssl
 
+	wget -O openssl.tar.gz ${OPENSSL_LINK}openssl-${OPENSSL_VERSION}.tar.gz \
+		&& mkdir openssl \
+		&& tar zxf openssl.tar.gz -C openssl --strip-components=1
 
+	# download zlib library
 
-# compile and deploy location
+	wget -O zlib.tar.gz ${ZLIB_LINK}${ZLIB_VERSION}zlib-${ZLIB_VERSION}.tar.gz \
+		&& mkdir zlib \
+		&& tar zxf zlib.tar.gz -C zlib --strip-components=1
 
-cd ${OPENSHIFT_DATA_DIR} && mkdir deploy_nginx/
+	# download different nginx modules - ngx_http_auth_request_module, ngx_cache_purge, nginx-push-stream-module, ngx_http_geoip2_module 
 
-#compile pcre library
-cd ${OPENSHIFT_DATA_DIR}build_nginx/pcre \
-	&& ./configure --prefix=${OPENSHIFT_DATA_DIR}deploy_nginx/pcre \
-	&& make \
-	&& make install
+	git clone https://github.com/PiotrSikora/ngx_http_auth_request_module.git \
+		&& git clone https://github.com/wandenberg/nginx-push-stream-module.git \
+		&& git clone https://github.com/leev/ngx_http_geoip2_module.git \
+		&& git clone https://github.com/FRiCKLE/ngx_cache_purge.git	
+
+	# compile and deploy location
+
+	mkdir ${OPENSHIFT_DATA_DIR}deploy_nginx
+
+	# compile pcre library
+
+	cd ${OPENSHIFT_DATA_DIR}build_nginx/pcre \
+		&& ./configure --prefix=${OPENSHIFT_DATA_DIR}deploy_nginx/pcre \
+		&& make \
+		&& make install
+		
+	# compile zlib library
+
+	cd ${OPENSHIFT_DATA_DIR}build_nginx/zlib \
+		&& ./configure --prefix=${OPENSHIFT_DATA_DIR}deploy_nginx/zlib \
+		&& make \
+		&& make install
+		
+
+	#compile openssl library
+	cd ${OPENSHIFT_DATA_DIR}build_nginx/openssl \
+		&& ./config --prefix=${OPENSHIFT_DATA_DIR}deploy_nginx/openssl --openssldir=${OPENSHIFT_DATA_DIR}deploy_nginx/openssl \
+		&& make depend \
+		&& make \
+		&& make install
+
+	cd ${OPENSHIFT_SERVER_DIR}usr/bin \
+	&& mv nginx nginx.old
+}
 	
-#compile zlib library
 
-cd ${OPENSHIFT_DATA_DIR}build_nginx/zlib \
-	&& ./configure --prefix=${OPENSHIFT_DATA_DIR}deploy_nginx/zlib \
-	&& make \
-	&& make install
-	
-
-#compile openssl library
-cd ${OPENSHIFT_DATA_DIR}build_nginx/openssl \
-	&& ./config --prefix=${OPENSHIFT_DATA_DIR}deploy_nginx/openssl --openssldir=${OPENSHIFT_DATA_DIR}deploy_nginx/openssl \
-	&& make depend \
-	&& make \
-	&& make install
-	
-
-cd ${OPENSHIFT_SERVER_DIR}/usr/bin \
-&& mv nginx nginx.old
-	
-
+function install_nginx() {
 #configure nginx
 
-cd ${OPENSHIFT_DATA_DIR}build_nginx/nginx \
-&&  ./configure \
+	cd ${OPENSHIFT_DATA_DIR}build_nginx/nginx \
+	&&  ./configure \
 	--prefix=${OPENSHIFT_SERVER_DIR} \
 	--with-cc-opt='-g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2' \
     	--with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro' \
@@ -109,18 +114,17 @@ cd ${OPENSHIFT_DATA_DIR}build_nginx/nginx \
 	if [ $? -eq 0 ]; then
 		echo "NGINX has successfully been installed!"
 		rm -rf ${OPENSHIFT_DATA_DIR}build_nginx \
-		&& rm -rf ${OPENSHIFT_DATA_DIR}deploy_nginx
+		&& rm -rf ${OPENSHIFT_DATA_DIR}deploy_nginx \
+		&& rm ${OPENSHIFT_SERVER_DIR}usr/bin/nginx.old
 	else
 		echo "The installation of NGINX has been interrupted!"
+		mv ${OPENSHIFT_SERVER_DIR}usr/bin/nginx.old ${OPENSHIFT_SERVER_DIR}usr/bin/nginx
 	fi
-	
+}
 
-#delete old version of nginx sbin file
-#cd ${OPENSHIFT_SERVER_DIR}/usr/versions \
-#	&& rm -rf 1.4.4
-	
 
-#edit the manifest file with the latest nginx version 
+function update_metadata() {
+# edit the manifest file with the latest nginx version 
 cd ${OPENSHIFT_SERVER_DIR}metadata \
 	&& rm -rf manifest.yml \
 	&& touch manifest.yml \
@@ -131,7 +135,7 @@ Display-Name: Web server
 Version: "${NGINX_VERSION}"
 Versions: ["${NGINX_VERSION}"]
 Website: https://github.com/alexviean/openshift-test
-Cartridge-Version: 0.0.4
+Cartridge-Version: 0.0.5
 Cartridge-Vendor: alexviean
 Categories:
   - service
@@ -181,8 +185,4 @@ Endpoints:
 Install-Build-Required: false
 
 EOF
-
-
-
-
-	
+}

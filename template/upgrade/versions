@@ -21,13 +21,13 @@ export BISON_VERSION='2.7.1'
 
 ## DOWNLOAD LINKS
 
-export NGINX_LINK=http://nginx.org/download
-export PHP_LINK=http://php.net/distributions
-export PCRE_LINK=https://ftp.pcre.org/pub/pcre
-export OPENSSL_LINK=https://www.openssl.org/source
-export ZLIB_LINK=https://downloads.sourceforge.net/project/libpng/zlib
-export ICU_LINK=http://download.icu-project.org/files/icu4c
-export RE2C_LINK=https://github.com/skvadrik/re2c/releases/download
-export MCRYPT_LINK=https://downloads.sourceforge.net/project/mcrypt/Libmcrypt
-export LIBTOOL_LINK=http://ftp.gnu.org/gnu/libtool
-export BISON_LINK=http://ftp.gnu.org/gnu/bison
+export NGINX_LINK=http://nginx.org/download/
+export PHP_LINK=http://php.net/distributions/
+export PCRE_LINK=https://ftp.pcre.org/pub/pcre/
+export OPENSSL_LINK=https://www.openssl.org/source/
+export ZLIB_LINK=https://downloads.sourceforge.net/project/libpng/zlib/
+export ICU_LINK=http://download.icu-project.org/files/icu4c/
+export RE2C_LINK=https://github.com/skvadrik/re2c/releases/download/
+export MCRYPT_LINK=https://downloads.sourceforge.net/project/mcrypt/Libmcrypt/
+export LIBTOOL_LINK=http://ftp.gnu.org/gnu/libtool/
+export BISON_LINK=http://ftp.gnu.org/gnu/bison/

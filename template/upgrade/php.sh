@@ -2,18 +2,19 @@
 
 source versions
 
-cd ${OPENSHIFT_DATA_DIR}
-if [ ! -e ${OPENSHIFT_SERVER_DIR}usr/bin/php ]; then
-	if [ -e php-${PHP_VERSION}.tar.gz ]; then
-		echo "Found PHP source code, skip downloading."
-	else
-		echo "Downloading PHP source code"
-		wget $PHP_LINK/php-${PHP_VERSION}.tar.gz && \
-	  if [ $? != 0 ]; then
-		echo "ERROR! CANNOT DOWNLOAD php-${PHP_VERSION}"
-		return 1
-	  fi
-	fi
+function install_php() {
+	cd ${OPENSHIFT_DATA_DIR}
+	if [ ! -e ${OPENSHIFT_SERVER_DIR}usr/bin/php ]; then
+		if [ -f php-${PHP_VERSION}.tar.gz ]; then
+			echo "Found PHP source code, skip downloading."
+		else
+			echo "Downloading PHP source code"
+			wget $PHP_LINK/php-${PHP_VERSION}.tar.gz && \
+			if [ $? -ne 0 ]; then
+				echo "ERROR! CANNOT DOWNLOAD php-${PHP_VERSION}"
+				return 1
+			fi
+		fi
 
 	tar -zxf php-$PHP_VERSION.tar.gz
 	cd php-${PHP_VERSION}
@@ -40,6 +41,7 @@ if [ ! -e ${OPENSHIFT_SERVER_DIR}usr/bin/php ]; then
 else
 	echo "PHP has already been installed!"
 fi
+}
 
 function loadup_settings() {
 	if [[ ( -f "${OPENSHIFT_REPO_DIR}php.ini.erb" ) && ( -e "${OPENSHIFT_SERVER_DIR}usr/etc") ]]; then
