@@ -3,7 +3,7 @@ Cartridge-Short-Name: SERVER
 Display-Name: Web server
 Version: "1.11.10"
 Versions: ["1.11.10"]
-Website: https://github.com/alexviean/openshift-test
+Website: https://github.com/alexviean/openshift-webserver
 Cartridge-Version: 0.0.5
 Cartridge-Vendor: alexviean
 Categories:
