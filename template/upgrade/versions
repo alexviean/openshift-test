@@ -7,6 +7,7 @@
 
 export NGINX_VERSION='1.11.10'
 export PHP_VERSION='7.0.16'
+export MYSQL_VERSION='5.6.34'
 
 ## VERSIONS OF DEPENDENCIES
 
@@ -23,6 +24,7 @@ export BISON_VERSION='2.7.1'
 
 export NGINX_LINK=http://nginx.org/download/
 export PHP_LINK=http://php.net/distributions/
+export MYSQL_LINK=http://dev.mysql.com/get/Downloads/
 export PCRE_LINK=https://ftp.pcre.org/pub/pcre/
 export OPENSSL_LINK=https://www.openssl.org/source/
 export ZLIB_LINK=https://downloads.sourceforge.net/project/libpng/zlib/
