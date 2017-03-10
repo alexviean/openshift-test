@@ -55,11 +55,11 @@ function install_dephp() {
 
 	cd ${OPENSHIFT_DATA_DIR}
 	if [ ! -f re2c-${RE2C_VERSION}.tar.gz ]; then
-		wget ${RE}2C_LINK/${RE2C_VERSION}/re2c-${RE2C_VERSION}.tar.gz
+		wget ${RE2C_LINK}/${RE2C_VERSION}/re2c-${RE2C_VERSION}.tar.gz
 	fi
-	rm -rf re2c-${RE}2C_VERSION
+	rm -rf re2c-${RE2C_VERSION}
 	tar -zxf re2c-${RE2C_VERSION}.tar.gz
-	cd re2c-${RE}2C_VERSION
+	cd re2c-${RE2C_VERSION}
 	./configure --prefix=${OPENSHIFT_SERVER_DIR}usr
 	make install
 		if [ $? -eq 0 ]; then
@@ -152,7 +152,7 @@ function install_php() {
 	--with-layout=PHP --disable-fileinfo --disable-debug --with-curl --with-mhash --with-pgsql --with-mysqli --with-pdo-mysql --with-pdo-pgsql --with-openssl --with-xmlrpc --with-xsl \
 	--with-bz2 --with-gettext --with-readline --with-kerberos --with-gd --with-jpeg-dir --with-png-dir --with-png-dir --with-xpm-dir --with-freetype-dir --without-pear \
 	--enable-gd-native-ttf --enable-fpm --enable-cli --enable-inline-optimization --enable-exif --enable-wddx --enable-zip --enable-bcmath --enable-calendar --enable-ftp \
-	--enable-mbstring --enable-soap --enable-sockets --enable-shmop --enable-dba --enable-sysvsem --enable-sysvshm --enable-sysvmsg --enable-intl --enable-opcache --enable-maintainer-zts
+	--enable-mbstring --enable-soap --enable-sockets --enable-shmop --enable-dba --enable-sysvsem --enable-sysvshm --enable-sysvmsg --enable-intl --enable-opcache
 	make
 	make install
 	if [ $? -eq 0 ]; then
@@ -198,7 +198,7 @@ function cleanup() {
 	strip ${OPENSHIFT_SERVER_DIR}usr/sbin/php-fpm
 
 	for t in "${to_strip[@]}"; do
-		rm ${OPENSHIFT_SERVER_DIR}usr/sbin/$t
+		strip ${OPENSHIFT_SERVER_DIR}usr/bin/$t
 	done
 
 }
