@@ -94,7 +94,7 @@ function loadup_settings() {
 	oo-erb ${OPENSHIFT_REPO_DIR}php-fpm.conf.erb > ${OPENSHIFT_SERVER_DIR}usr/etc/php-fpm.conf
 	fi
 
-	${OPENSHIFT_SERVER_DIR}usr/sbin/php-fpm
+	#${OPENSHIFT_SERVER_DIR}usr/sbin/php-fpm
 }
 
 
