@@ -11,4 +11,15 @@ server {
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         include       fastcgi_params;
     }
+
+    location /phpmyadmin {
+        root <%= ENV['OPENSHIFT_SERVER_DIR'] %>usr;
+        index   index.php index.html;
+
+        location ~ \.php$ {
+        fastcgi_pass  <%= ENV['OPENSHIFT_SERVER_IP'] %>:9000;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include       fastcgi_params;
+        }
+    }
 }
