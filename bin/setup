@@ -18,3 +18,7 @@ echo "$version" > env/NGINX_VERSION
 for dir in logs run; do
 	mkdir -p $dir
 done
+
+if [[ ( -f "${OPENSHIFT_REPO_DIR}www.conf.erb" ) && ( -e "${OPENSHIFT_SERVER_DIR}usr/etc/php-fpm.d" )]]; then
+	oo-erb ${OPENSHIFT_REPO_DIR}www.conf.erb > ${OPENSHIFT_SERVER_DIR}usr/etc/php-fpm.d/www.conf
+fi
