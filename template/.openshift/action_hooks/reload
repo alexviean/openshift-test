@@ -1,0 +1,7 @@
+#!/bin/bash
+
+source ${OPENSHIFT_SERVER_DIR}bin/control
+
+reload
+
+exit 0

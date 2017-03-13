@@ -1,0 +1,8 @@
+#!/bin/bash
+#Edit common.sh to modify httpd arguments
+
+source ${OPENSHIFT_SERVER_DIR}bin/control
+
+start
+
+exit 0
