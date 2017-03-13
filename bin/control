@@ -86,7 +86,6 @@ function loadup_settings() {
 		mkdir -p ${OPENSHIFT_SERVER_DIR}usr/etc
 	fi
 
-
 	if [[ ( -f "${OPENSHIFT_REPO_DIR}php.ini.erb" ) && ( -e "${OPENSHIFT_SERVER_DIR}usr/etc") ]]; then
 	oo-erb ${OPENSHIFT_REPO_DIR}php.ini.erb > ${OPENSHIFT_SERVER_DIR}usr/etc/php.ini
 	fi
