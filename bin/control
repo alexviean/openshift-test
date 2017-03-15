@@ -11,7 +11,6 @@ SERVER_PID_FILE=${OPENSHIFT_SERVER_DIR}run/nginx.pid
 function start() {
 	echo "Starting Nginx"
 
-	httpd -f ${OPENSHIFT_REPO_DIR}shutdown.conf -k stop
 	loadup_settings
 	if [ -f "${SERVER_EXEC}" ]; then
 
