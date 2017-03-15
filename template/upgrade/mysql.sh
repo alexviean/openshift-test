@@ -68,6 +68,11 @@ function add_port() {
 #fi
 }
 
+function start_mysql(){
+	cd ${OPENSHIFT_SERVER_DIR}usr
+	./bin/mysqld_safe --defaults-file=./etc/my.cnf &
+}
+
 function client_results() {
 # Output result
 client_result "MySQL ${MYSQL_VERSION} has been installed."
