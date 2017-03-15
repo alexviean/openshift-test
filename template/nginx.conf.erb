@@ -1,5 +1,5 @@
 server {
-    listen  <%= ENV['OPENSHIFT_SERVER_IP'] %>:80;
+    listen  <%= ENV['OPENSHIFT_SERVER_IP'] %>:<%= ENV['OPENSHIFT_SERVER_PORT'] %>;
     root    <%= ENV['OPENSHIFT_REPO_DIR'] %>public;
 
     location / {
