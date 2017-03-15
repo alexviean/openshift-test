@@ -25,7 +25,7 @@ ledir = ${OPENSHIFT_SERVER_DIR}usr/bin
 
 [mysqld]
 explicit-defaults-for-timestamp
-port=3306
+port=3307
 socket=${OPENSHIFT_TMP_DIR}mysql.sock
 basedir=${OPENSHIFT_SERVER_DIR}usr
 datadir=${OPENSHIFT_SERVER_DIR}usr/data
