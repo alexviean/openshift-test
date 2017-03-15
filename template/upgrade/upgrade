@@ -1,9 +1,9 @@
 #!/bin/bash
 #set -e
 
-source versions
-source nginx.sh
-source php.sh
+source ${OPENSHIFT_REPO_DIR}upgrade/versions
+source ${OPENSHIFT_REPO_DIR}upgrade/nginx.sh
+source ${OPENSHIFT_REPO_DIR}upgrade/php.sh
 
 prepare_ndep
 install_nginx

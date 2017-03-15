@@ -12,7 +12,7 @@ mkdir -p ${OPENSHIFT_SERVER_DIR}usr/data
 
 # Copy just the mecessary files
 tar -xvzf ${OPENSHIFT_DATA_DIR}tmp.tgz --strip-components=1 -C ${OPENSHIFT_SERVER_DIR}usr mysql-${MYSQL_VERSION}-linux-glibc2.5-x86_64/bin/{mysql,mysqld,mysqld_safe,my_print_defaults,resolveip}
-tar -xvzf ${OPENSHIFT_DATA_DIR}tmp.tgz --strip-components=1 -C ${OPENSHIFT_SERVER_DIR}usr mysql-${MYSQL_VERSION}-linux-glibc2.5-x86_64/share/english
+tar -xvzf ${OPENSHIFT_DATA_DIR}tmp.tgz --strip-components=1 -C ${OPENSHIFT_SERVER_DIR}usr mysql-${MYSQL_VERSION}-linux-glibc2.5-x86_64/share
 tar -xvzf ${OPENSHIFT_DATA_DIR}tmp.tgz --strip-components=2 -C ${OPENSHIFT_SERVER_DIR}usr/bin mysql-${MYSQL_VERSION}-linux-glibc2.5-x86_64/scripts/mysql_install_db
 tar -xvzf ${OPENSHIFT_DATA_DIR}tmp.tgz --strip-components=2 -C ${OPENSHIFT_SERVER_DIR}usr mysql-${MYSQL_VERSION}-linux-glibc2.5-x86_64/support-files/my-default.cnf
 }
@@ -40,7 +40,6 @@ function internal_data() {
 cd ${OPENSHIFT_SERVER_DIR}usr
 ./bin/mysql_install_db \
   --defaults-file=${OPENSHIFT_SERVER_DIR}usr/etc/my.cnf \
-  --insecure \
   --datadir=${OPENSHIFT_SERVER_DIR}usr/data
 }
 

@@ -25,4 +25,5 @@ rm ${OPENSHIFT_SERVER_DIR}usr/phpmyadmin.tar.gz
 if [ -f "${OPENSHIFT_REPO_DIR}www.conf.erb" ]; then
 	mkdir -p ${OPENSHIFT_SERVER_DIR}usr/etc/php-fpm.d
 	oo-erb ${OPENSHIFT_REPO_DIR}www.conf.erb > ${OPENSHIFT_SERVER_DIR}usr/etc/php-fpm.d/www.conf
+	rm ${OPENSHIFT_REPO_DIR}www.conf.erb
 fi

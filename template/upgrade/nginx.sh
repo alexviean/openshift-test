@@ -28,7 +28,7 @@ function prepare_ndep() {
 
 	# download zlib library
 
-	wget -O zlib.tar.gz ${ZLIB_LINK}${ZLIB_VERSION}zlib-${ZLIB_VERSION}.tar.gz \
+	wget -O zlib.tar.gz ${ZLIB_LINK}${ZLIB_VERSION}/zlib-${ZLIB_VERSION}.tar.gz \
 		&& mkdir zlib \
 		&& tar zxf zlib.tar.gz -C zlib --strip-components=1
 
@@ -65,8 +65,10 @@ function prepare_ndep() {
 		&& make \
 		&& make install
 
-	cd ${OPENSHIFT_SERVER_DIR}usr/bin \
-	&& mv nginx nginx.old
+	if [ -e ${OPENSHIFT_SERVER_DIR}usr/bin/nginx ]; then
+		cd ${OPENSHIFT_SERVER_DIR}usr/bin \
+		&& mv nginx nginx.old
+	fi
 }
 	
 
@@ -113,9 +115,10 @@ function install_nginx() {
 	&& make install	
 	if [ $? -eq 0 ]; then
 		echo "NGINX has successfully been installed!"
-		rm -rf ${OPENSHIFT_DATA_DIR}build_nginx \
-		&& rm -rf ${OPENSHIFT_DATA_DIR}deploy_nginx \
-		&& rm ${OPENSHIFT_SERVER_DIR}usr/bin/nginx.old
+		rm -rf ${OPENSHIFT_DATA_DIR}/{build_nginx,deploy_nginx}
+		if [ -e ${OPENSHIFT_SERVER_DIR}usr/bin/nginx.old ]; then
+			rm ${OPENSHIFT_SERVER_DIR}usr/bin/nginx.old
+		fi
 	else
 		echo "The installation of NGINX has been interrupted!"
 		mv ${OPENSHIFT_SERVER_DIR}usr/bin/nginx.old ${OPENSHIFT_SERVER_DIR}usr/bin/nginx
