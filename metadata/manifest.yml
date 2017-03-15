@@ -42,7 +42,7 @@ Group-Overrides:
 Endpoints:
   - Private-IP-Name:   IP
     Private-Port-Name: PORT
-    Private-Port:      8080
+    Private-Port:      80
     Public-Port-Name:  PROXY_PORT
     Mappings:
       - Frontend:      ""
