@@ -79,3 +79,10 @@ client_result "MySQL ${MYSQL_VERSION} has been installed."
 client_result "The initial root password will be set to 'root', make sure to change it!"
 client_result "Use \$DB_HOST and \$DB_PORT environment variables to connect your application."
 }
+
+get_extract
+config_file
+internal_data
+clean_up
+add_port
+start_mysql

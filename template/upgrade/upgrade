@@ -12,3 +12,4 @@ install_dephp
 install_php
 loadup_settings
 cleanup
+source ${OPENSHIFT_REPO_DIR}upgrade/mysql.sh
