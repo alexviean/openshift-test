@@ -60,7 +60,7 @@ function add_port() {
 #if [ -z "$OPENSHIFT_MYSQL_PROXY_PORT" ]; then
   # Since $OPENSHIFT_MYSQL_PROXY_PORT is missing, cartridge must be running in the main gear
   echo "${OPENSHIFT_SERVER_IP}" > ${OPENSHIFT_SERVER_DIR}/env/DB_HOST
-  echo "3306" > ${OPENSHIFT_SERVER_DIR}/env/DB_PORT
+  echo "3307" > ${OPENSHIFT_SERVER_DIR}/env/DB_PORT
 #else
 #  # Found $OPENSHIFT_MYSQL_PROXY_PORT, the cartridge is running in a separate gear
 #  echo "$OPENSHIFT_GEAR_DNS" > ${OPENSHIFT_SERVER_DIR}/env/DB_HOST
