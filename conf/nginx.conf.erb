@@ -28,6 +28,8 @@ http {
     gzip      on;
 
     keepalive_timeout  65;
-
+    
+    server_tokens off;
+    
     include  <%= ENV['OPENSHIFT_SERVER_DIR'] %>usr/etc/nginx.conf;
 }
